@@ -4,23 +4,23 @@ void	put_pixel(int x, int y ,int color, t_game *game)
 {
 	if (x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
 		return;
-	int index = y * game->size_line + (x * game->bpp) / 8;
-	game->data[index] = color & 0xFF;
-	game->data[index + 1] = (color >> 8) & 0xFF;
-	game->data[index + 2] = (color >> 16) & 0xFF;
+	int	offset;
+
+	offset = (y * game->size_line) + (x * (game->bpp / 8));
+	*(unsigned int *)(offset + game->data) = color;
 }
 
-void	draw_square(int x, int y, int size, int color, t_game *game)
-{
-	for (int i = 0; i < size; i++)
-		put_pixel(x  + i, y, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x, y + i, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x + size, y + i, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x + i, y + size, color, game);
-}
+// void	draw_square(int x, int y, int size, int color, t_game *game)
+// {
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x  + i, y, color, game);
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x, y + i, color, game);
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x + size, y + i, color, game);
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x + i, y + size, color, game);
+// }
 
 char	**get_map(void)
 {
@@ -39,59 +39,75 @@ char	**get_map(void)
     return (map);
 }
 
-void	draw_map(t_game *game)
-{
-	char **map = game->map;
-	int color = 0x0000FF;
-	for (int y = 0; map[y]; y++)
-		for (int x = 0; map[y][x]; x++)
-			if (map[y][x] == '1')
-				draw_square(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE,color, game);
-}
+// void	draw_map(t_game *game)
+// {
+// 	char **map = game->map;
+// 	int color = 0x0000FF;
+// 	for (int y = 0; map[y]; y++)
+// 		for (int x = 0; map[y][x]; x++)
+// 			if (map[y][x] == '1')
+// 				draw_square(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE,color, game);
+// }
 
 
 int throw_ray(float x, float y, t_game *game)
 {
-	int xx = (int)(x / BLOCK_SIZE);
-	int yx = (int)(y / BLOCK_SIZE);
+	int xx;
+	int yx;
 
+	xx= (int)(x / BLOCK_SIZE); // ray duvarada değiyor mu değiyorsa 1
+	yx= (int)(y / BLOCK_SIZE);
 	// harita dışı durumları duvar say
 	if (xx < 0 || yx < 0)
 		return 1;
 	if (!game->map[yx])
 		return 1;
-	int row_len = (int)strlen(game->map[yx]);
-	if (xx >= row_len)
+	if (xx >= (int)strlen(game->map[yx]))
 		return 1;
-
-	char c = game->map[yx][xx];
-	if (c == '1')
+	if (game->map[yx][xx] == '1')
 		return 1;
 	return 0;
 }
 
 float cast_single_ray(float ray_angle, t_game *g, t_player *p)
 {
-    float x = p->x, y = p->y;
-    const float step_len = 1.0f;
-    float cx = cosf(ray_angle), sx = sinf(ray_angle);
-    int steps = 0;
+    float x;
+	float y;
+    float step_len;
+	float cx;
+	float sx;
+    int steps;
+
+	x = p->x;
+	y = p->y;
+	step_len = 1;
+    cx = cosf(ray_angle);
+	sx = sinf(ray_angle);
+	steps = 0;
 
     while (!throw_ray(x, y, g) && steps++ < MAX_STEPS)
     {
         x += cx * step_len;
         y += sx * step_len;
-        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) break;
+        if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+			break;
     }
-    float dx = x - p->x, dy = y - p->y;
+    float dx;
+	float dy;
+	dx = x - p->x;
+	dy = y - p->y;
     return sqrtf(dx*dx + dy*dy);
 }
 
 void draw_vline(int x, int y0, int y1, int color, t_game *g)
 {
-    if (x < 0 || x >= WIDTH) return;
-    if (y0 < 0) y0 = 0;
-    if (y1 >= HEIGHT) y1 = HEIGHT - 1;
+    if (x < 0 || x >= WIDTH)
+		return;
+    if (y0 < 0)
+		y0 = 0;
+    if (y1 >= HEIGHT)
+		y1 = HEIGHT - 1;
+	
     for (int y = y0; y <= y1; y++)
         put_pixel(x, y, color, g);
 }
@@ -136,7 +152,7 @@ int draw_loop(t_game *game)
 	move_player(&game->player, game);
 	clear_image(game);
 	
-	float proj_plane = (WIDTH / 2.0) / tanf((60 * (P / 180)) / 2.0);
+	float proj_plane = (WIDTH / 2) / tanf((60 * (P / 180)) / 2.0);
 	float start_angle = game->player.rotation - (60 * (P / 180)) / 2.0;
 	float step = (60 * (P / 180)) / (float)WIDTH;
 
@@ -148,7 +164,8 @@ int draw_loop(t_game *game)
 		float dist = cast_single_ray(ray_angle, game, &game->player);
 		dist *= cosf(ray_angle - game->player.rotation); // Fisheye düzeltmesi
 
-		if (dist < 1) dist = 1;
+		if (dist < 1)
+			dist = 1;
 		float wall_height = (BLOCK_SIZE * proj_plane) / dist;
 
 		int top = (HEIGHT / 2) - (wall_height / 2);
