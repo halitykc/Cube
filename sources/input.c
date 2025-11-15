@@ -20,17 +20,17 @@ int		key_press(int keycode, t_player	*player)
 	printf("x : %f \n", player->x);
 	printf("y : %f \n", player->y);
 
-	if (keycode == W)
+	if (keycode == XK_s)
 		player->key_up = 1;
-	if (keycode == S)
+	if (keycode == XK_w)
 		player->key_down= 1;
-	if (keycode == D)
+	if (keycode == XK_a)
 		player->key_right = 1;
-	if (keycode == A)
+	if (keycode == XK_d)
 		player->key_left = 1;
-	if(keycode == R_left)
+	if(keycode == XK_Left)
 		player->rotate_left = 1;
-    if(keycode == R_right)
+    if(keycode == XK_Right)
 		player->rotate_right = 1;
 	if (keycode == XK_Escape)
 		exitt(player->game);
@@ -38,17 +38,17 @@ int		key_press(int keycode, t_player	*player)
 }
 int		key_release(int keycode, t_player	*player)
 {
-	if (keycode == W)
+	if (keycode == XK_s)
 		player->key_up = 0;
-	if (keycode == S)
+	if (keycode == XK_w)
 		player->key_down= 0;
-	if (keycode == D)
+	if (keycode == XK_a)
 		player->key_right = 0;
-	if (keycode == A)
+	if (keycode == XK_d)
 		player->key_left = 0;
-	if(keycode == R_left)
+	if(keycode == XK_Left)
 		player->rotate_left = 0;
-    if(keycode == R_right)
+    if(keycode == XK_Right)
 		player->rotate_right = 0;
 	return 0;
 }

@@ -87,7 +87,7 @@ float cast_single_ray(float ray_angle, t_game *g, t_player *p)
     return sqrtf(dx*dx + dy*dy);
 }
 
-inline void draw_vline(int x, int y0, int y1, int color, t_game *g)
+void draw_vline(int x, int y0, int y1, int color, t_game *g)
 {
     if (x < 0 || x >= WIDTH) return;
     if (y0 < 0) y0 = 0;
@@ -97,74 +97,68 @@ inline void draw_vline(int x, int y0, int y1, int color, t_game *g)
 }
 
 
-// int draw_loop(t_game *game)
-// {
-// 	t_player *player = &game->player;
-// 	move_player(player, game);
-// 	clear_image(game);
-// 	draw_square(player->x, player->y, 50, 0x00FF00, game);
-// 	draw_map(game);
-
-// 	// Işın parametreleri
-// 	float	start_angle = player->rotation - (60 * (P / 180)) / 2 ;
-// 	float	step = (60 * (P / 180)) / NUM_RAYS;
-
-// 	int i = -1;
-// 	while (++i < NUM_RAYS)
-// 	{
-// 		float xray = player->x;
-// 		float yray = player->y;
-// 		float ray_angle = start_angle + (i * step);
-// 		float cos_a = -cos(ray_angle);
-// 		float sin_a = -sin(ray_angle);
-// 		int steps = 0;
-
-// 		while (!throw_ray(xray, yray, game) && steps++ < MAX_STEPS)
-// 		{
-// 			if ((int)xray >= 0 && (int)xray < WIDTH && (int)yray >= 0 && (int)yray < HEIGHT)
-// 				put_pixel((int)xray, (int)yray, 0xFF0000, game);
-// 			xray += cos_a * 1.5f;
-// 			yray += sin_a * 1.5f;
-// 			if (xray < 0 || xray >= WIDTH || yray < 0 || yray >= HEIGHT)
-// 				break;
-// 		}
-// 	}
-// 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
-// 	return 0;
-// }
+/* int draw_loop(t_game *game)  
+ {
+ 	t_player *player = &game->player;
+ 	move_player(player, game);
+ 	clear_image(game);
+ 	draw_square(player->x, player->y, 50, 0x00FF00, game);
+ 	draw_map(game);
+ 	// Işın parametreleri
+ 	float	start_angle = player->rotation - (60 * (P / 180)) / 2 ;
+ 	float	step = (60 * (P / 180)) / NUM_RAYS;
+ 	int i = -1;
+ 	while (++i < NUM_RAYS)
+ 	{
+ 		float xray = player->x;
+ 		float yray = player->y;
+ 		float ray_angle = start_angle + (i * step);
+ 		float cos_a = -cos(ray_angle);
+ 		float sin_a = -sin(ray_angle);
+ 		int steps = 0;
+ 		while (!throw_ray(xray, yray, game) && steps++ < MAX_STEPS)
+ 		{
+ 			if ((int)xray >= 0 && (int)xray < WIDTH && (int)yray >= 0 && (int)yray < HEIGHT)
+ 				put_pixel((int)xray, (int)yray, 0xFF0000, game);
+ 			xray += cos_a * 1.5f;
+ 			yray += sin_a * 1.5f;
+ 			if (xray < 0 || xray >= WIDTH || yray < 0 || yray >= HEIGHT)
+ 				break;
+ 		}
+ 	}
+ 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+ 	return 0;
+ }
+*/
 
 int draw_loop(t_game *game)
 {
-	t_player *player = &game->player;
-	move_player(player, game);
+	move_player(&game->player, game);
 	clear_image(game);
-	draw_square(player->x, player->y, 50, 0x00FF00, game);
-	draw_map(game);
+	
+	float proj_plane = (WIDTH / 2.0) / tanf((60 * (P / 180)) / 2.0);
+	float start_angle = game->player.rotation - (60 * (P / 180)) / 2.0;
+	float step = (60 * (P / 180)) / (float)WIDTH;
 
-	// Işın parametreleri
-	float	start_angle = player->rotation - (60 * (P / 180)) / 2 ;
-	float	step = (60 * (P / 180)) / NUM_RAYS;
-
-	int i = -1;
-	while (++i < NUM_RAYS)
+	int col;
+	col = -1;
+	while (++col < WIDTH)
 	{
-		float xray = player->x;
-		float yray = player->y;
-		float ray_angle = start_angle + (i * step);
-		float cos_a = -cos(ray_angle);
-		float sin_a = -sin(ray_angle);
-		int steps = 0;
+		float ray_angle = start_angle + col * step;
+		float dist = cast_single_ray(ray_angle, game, &game->player);
+		dist *= cosf(ray_angle - game->player.rotation); // Fisheye düzeltmesi
 
-		while (!throw_ray(xray, yray, game) && steps++ < MAX_STEPS)
-		{
-			if ((int)xray >= 0 && (int)xray < WIDTH && (int)yray >= 0 && (int)yray < HEIGHT)
-				put_pixel((int)xray, (int)yray, 0xFF0000, game);
-			xray += cos_a * 1.5f;
-			yray += sin_a * 1.5f;
-			if (xray < 0 || xray >= WIDTH || yray < 0 || yray >= HEIGHT)
-				break;
-		}
+		if (dist < 1) dist = 1;
+		float wall_height = (BLOCK_SIZE * proj_plane) / dist;
+
+		int top = (HEIGHT / 2) - (wall_height / 2);
+		int bottom = (HEIGHT / 2) + (wall_height / 2);
+
+		draw_vline(col, 0, top, 0x87CEEB, game);
+		draw_vline(col, top, bottom, 0x888888, game);
+		draw_vline(col, bottom, HEIGHT, 0x444444, game);
 	}
+
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
 	return 0;
 }
