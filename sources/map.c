@@ -6,7 +6,7 @@
 /*   By: hyakici <hyakici@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:21:59 by hyakici           #+#    #+#             */
-/*   Updated: 2025/11/22 12:49:06 by hyakici          ###   ########.fr       */
+/*   Updated: 2025/11/22 13:24:55 by hyakici          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,7 @@
 
 void	clear_image(t_game *game)
 {
-	int	x;
-	int	y;
-
-	y = -1;
-	while (++y < HEIGHT)
-	{
-		x = -1;
-		while (++x < WIDTH)
-			put_pixel(x, y, 0, game);
-	}
+	memset(game->data, 0, game->size_line * HEIGHT);
 }
 
 char	**get_map(void)

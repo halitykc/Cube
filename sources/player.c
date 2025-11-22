@@ -6,7 +6,7 @@
 /*   By: hyakici <hyakici@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 11:55:58 by hyakici           #+#    #+#             */
-/*   Updated: 2025/11/22 11:58:01 by hyakici          ###   ########.fr       */
+/*   Updated: 2025/11/22 13:29:50 by hyakici          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,23 @@ void	move_player(t_player *player, t_game *game)
 	int		map_x;
 	int		map_y;
 
+	rotate_player(player);
 	new_y = player->y;
 	new_x = player->x;
-	rotate_player(player);
 	position_player(player, &new_y, &new_x);
-	map_x = (int)(new_x / BLOCK_SIZE);
+	map_x = (int)(player->x / BLOCK_SIZE); 
 	map_y = (int)(new_y / BLOCK_SIZE);
-	if (game->map[map_y][map_x] == '1')
-		return ;
-	player->x = new_x;
-	player->y = new_y;
+	if (map_y >= 0 && map_y < 10 && map_x >= 0 && map_x < 15) 
+	{
+		if (game->map[map_y][map_x] != '1')
+			player->y = new_y;
+	}
+
+	map_x = (int)(new_x / BLOCK_SIZE);
+	map_y = (int)(player->y / BLOCK_SIZE);
+	if (map_y >= 0 && map_y < 10 && map_x >= 0 && map_x < 15)
+	{
+		if (game->map[map_y][map_x] != '1')
+			player->x = new_x; 
+	}
 }

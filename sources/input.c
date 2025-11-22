@@ -6,7 +6,7 @@
 /*   By: hyakici <hyakici@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:01:58 by hyakici           #+#    #+#             */
-/*   Updated: 2025/11/22 12:06:29 by hyakici          ###   ########.fr       */
+/*   Updated: 2025/11/22 13:02:08 by hyakici          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	exitt(t_game *game)
 		free(game->map);
 	}
 	exit(0);
+	return (31);
 }
 
 int	key_press(int keycode, t_player	*player)

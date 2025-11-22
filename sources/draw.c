@@ -6,7 +6,7 @@
 /*   By: hyakici <hyakici@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:10:57 by hyakici           #+#    #+#             */
-/*   Updated: 2025/11/22 12:51:51 by hyakici          ###   ########.fr       */
+/*   Updated: 2025/11/22 13:24:20 by hyakici          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ int	throw_ray(float x, float y, t_game *game)
 
 	xx = (int)(x / BLOCK_SIZE);
 	yx = (int)(y / BLOCK_SIZE);
-	if (xx < 0 || yx < 0)
+
+
+	if (yx < 0 || yx >= 10 || xx < 0 || xx >= 15) 
 		return (1);
-	if (!game->map[yx])
-		return (1);
-	if (xx >= (int)strlen(game->map[yx]))
-		return (1);
+		
 	if (game->map[yx][xx] == '1')
 		return (1);
+		
 	return (0);
 }
 
@@ -44,29 +44,23 @@ float	cast_single_ray(float ray_angle, t_game *g, t_player *p)
 {
 	float	x;
 	float	y;
-	float	step_len;
 	float	cx;
 	float	sx;
 	int		steps;
-	float 	dx;
-	float 	dy;
 
 	x = p->x;
 	y = p->y;
-	step_len = 1;
 	cx = cosf(ray_angle);
 	sx = sinf(ray_angle);
 	steps = 0;
 	while (!throw_ray(x, y, g) && steps++ < MAX_STEPS)
 	{
-		x += cx * step_len;
-		y += sx * step_len;
+		x += cx; 
+		y += sx;
 		if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
 			break ;
 	}
-	dx = x - p->x;
-	dy = y - p->y;
-	return (sqrtf(dx*dx + dy*dy));
+	return (sqrtf((x - p->x) * (x - p->x) + (y - p->y) * (y - p->y)));
 }
 
 static void	draw_vline(int x, int y0, int y1, int color, t_game *g)

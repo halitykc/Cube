@@ -6,7 +6,7 @@
 /*   By: hyakici <hyakici@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:06:41 by hyakici           #+#    #+#             */
-/*   Updated: 2025/11/22 12:09:51 by hyakici          ###   ########.fr       */
+/*   Updated: 2025/11/22 13:28:18 by hyakici          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	init_player(t_player *player, t_game *game)
 	player->rotate_left = 0;
 	player->rotate_right = 0;
 	player->game = game;
-	player->speed = 3;
+	player->speed = 1;
 	player->angle_speed = 0.05;
 }
 

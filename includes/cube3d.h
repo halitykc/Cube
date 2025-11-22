@@ -10,7 +10,7 @@
 #define NUM_RAYS 2
 #define MAX_STEPS 4000
 
-# define P 3.14
+# define P 3.1415926535
 
 #include "../minilibx-linux/mlx.h"
 #include <stdio.h>
