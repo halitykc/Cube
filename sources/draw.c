@@ -6,7 +6,7 @@
 /*   By: hyakici <hyakici@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:10:57 by hyakici           #+#    #+#             */
-/*   Updated: 2025/11/22 12:24:06 by hyakici          ###   ########.fr       */
+/*   Updated: 2025/11/22 12:51:51 by hyakici          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ float	cast_single_ray(float ray_angle, t_game *g, t_player *p)
 	return (sqrtf(dx*dx + dy*dy));
 }
 
-void	draw_vline(int x, int y0, int y1, int color, t_game *g)
+static void	draw_vline(int x, int y0, int y1, int color, t_game *g)
 {
 	int	y;
 
@@ -87,12 +87,32 @@ void	draw_vline(int x, int y0, int y1, int color, t_game *g)
 	}
 }
 
+static void	draw_ray_line(t_game *game, int col, float ray_angle, float proj_plane)
+{
+	float	dist;
+	float	wall_height;
+	int		top;
+	int		bottom;
+
+	dist = cast_single_ray(ray_angle, game, &game->player);
+	dist *= cosf(ray_angle - game->player.rotation);
+	if (dist < 1)
+		dist = 1;
+	wall_height = (BLOCK_SIZE * proj_plane) / dist;
+	top = (HEIGHT / 2) - (wall_height / 2);
+	bottom = (HEIGHT / 2) + (wall_height / 2);
+	draw_vline(col, 0, top, 0x87CEEB, game);
+	draw_vline(col, top, bottom, 0x888888, game);
+	draw_vline(col, bottom, HEIGHT, 0x444444, game);
+}
+
 int	draw_loop(t_game *game)
 {
 	float	proj_plane;
 	float	start_angle;
 	float	step;
 	int		col;
+	float	ray_angle;
 
 	move_player(&game->player, game);
 	clear_image(game);
@@ -102,22 +122,9 @@ int	draw_loop(t_game *game)
 	col = -1;
 	while (++col < WIDTH)
 	{
-		float ray_angle = start_angle + col * step;
-		float dist = cast_single_ray(ray_angle, game, &game->player);
-		dist *= cosf(ray_angle - game->player.rotation);
-
-		if (dist < 1)
-			dist = 1;
-		float wall_height = (BLOCK_SIZE * proj_plane) / dist;
-
-		int top = (HEIGHT / 2) - (wall_height / 2);
-		int bottom = (HEIGHT / 2) + (wall_height / 2);
-
-		draw_vline(col, 0, top, 0x87CEEB, game);
-		draw_vline(col, top, bottom, 0x888888, game);
-		draw_vline(col, bottom, HEIGHT, 0x444444, game);
+		ray_angle = start_angle + col * step;
+		draw_ray_line(game, col, ray_angle, proj_plane);
 	}
-
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
-	return 0;
+	return (0);
 }
