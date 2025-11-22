@@ -7,7 +7,8 @@ SFILES = 	./sources/main.c \
 			./sources/draw.c \
 			./sources/init.c \
 			./sources/input.c \
-			./sources/player.c 
+			./sources/player.c \
+			./sources/map.c
 OFILES = $(SFILES:.c=.o)
 
 all:$(NAME)

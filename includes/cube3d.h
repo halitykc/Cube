@@ -7,7 +7,7 @@
 # define HEIGHT 720
 # define BLOCK_SIZE 64
 
-#define NUM_RAYS 500
+#define NUM_RAYS 2
 #define MAX_STEPS 4000
 
 # define P 3.14
@@ -67,6 +67,7 @@ int draw_loop(t_game *game);
 char	**get_map(void);
 void	move_player(t_player *player, t_game *game);
 void clear_image(t_game *game);
+void	put_pixel(int x, int y, int color, t_game *game);
 
 
 #endif
