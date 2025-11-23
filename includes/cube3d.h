@@ -7,9 +7,6 @@
 # define HEIGHT 720
 # define BLOCK_SIZE 64
 
-#define NUM_RAYS 2
-#define MAX_STEPS 4000
-
 # define P 3.1415926535
 
 #include "../minilibx-linux/mlx.h"
@@ -58,6 +55,19 @@ typedef struct s_game
 
     char **map;
 } t_game;
+
+typedef struct s_ray
+{
+	float	delta_x;
+	float	delta_y;
+	float	side_x;
+	float	side_y;
+	int		map_x;
+	int		map_y;
+	int		step_x;
+	int		step_y;
+	int		side;
+}	t_ray;
 
 void	init_game(t_game *game);
 int		key_release(int keycode, t_player	*player);
