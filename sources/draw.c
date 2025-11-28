@@ -36,8 +36,8 @@ static void	init_ray(t_ray *ray, t_game *game, float angle)
 {
 	ray->map_x = (int)(game->player.x / BLOCK_SIZE);
 	ray->map_y = (int)(game->player.y / BLOCK_SIZE);
-	ray->delta_x = fabs(1 / cosf(angle));
-	ray->delta_y = fabs(1 / sinf(angle));
+	ray->delta_x = fabs(1 / cosf(angle)); // X ekseninde 1 adım gidersem h kaç olur
+	ray->delta_y = fabs(1 / sinf(angle)); // Y ekseninde 1 adım gidersem h kaç olur
 	if (cosf(angle) < 0)
 	{
 		ray->step_x = -1;
