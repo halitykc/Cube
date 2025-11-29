@@ -20,6 +20,31 @@
 
 typedef struct s_game t_game;
 
+// Her texturun gerekli bilgilerini tutan struct
+typedef struct s_img
+{
+    void    *img;
+    void    *addr;
+    int     bpp;
+    int     row_length;
+    int     endian;
+    int     width;
+    int     height;
+}               t_img;
+
+typedef struct s_draw
+{
+	t_img	*tex;
+	int		tex_x;
+	int		tex_y;
+	int		start;
+	int		end;
+	float	wall_h;
+	float	step;
+	float	tex_pos;
+    float   angle;
+}	t_draw;
+
 typedef struct s_player
 {
     float x;
@@ -54,6 +79,12 @@ typedef struct s_game
     t_player player;
 
     char **map;
+
+    t_img   north_wall;
+    t_img   south_wall;
+    t_img   east_wall;
+    t_img   west_wall;
+
 } t_game;
 
 typedef struct s_ray
@@ -68,6 +99,7 @@ typedef struct s_ray
 	int		step_y;
 	int		side;
 }	t_ray;
+
 
 void	init_game(t_game *game);
 int		key_release(int keycode, t_player	*player);
