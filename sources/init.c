@@ -6,7 +6,7 @@
 /*   By: hyakici <hyakici@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:06:41 by hyakici           #+#    #+#             */
-/*   Updated: 2025/12/20 12:02:11 by hyakici          ###   ########.fr       */
+/*   Updated: 2025/12/20 12:42:05 by hyakici          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static void	init_player(t_player *player, t_game *game)
 {
-	player->x = WIDTH / 2;
-	player->y = HEIGHT / 2;
+	player->x = (3 * BLOCK_SIZE) + (BLOCK_SIZE / 2);
+	player->y = (3 * BLOCK_SIZE) + (BLOCK_SIZE / 2);
 	player->rotation = P / 2;
 	player->key_down = 0;
 	player->key_right = 0;

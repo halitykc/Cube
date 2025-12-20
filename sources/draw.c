@@ -6,7 +6,7 @@
 /*   By: hyakici <hyakici@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:10:57 by hyakici           #+#    #+#             */
-/*   Updated: 2025/11/22 13:24:20 by hyakici          ###   ########.fr       */
+/*   Updated: 2025/12/20 12:56:30 by hyakici          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ static void	draw_pixels(t_game *game, int x, t_draw *d)
 	y = d->start;
 	while (y < d->end && y < HEIGHT)
 	{
-		d->tex_y = (int)d->tex_pos & (d->tex->height - 1);
+		d->tex_y = (int)d->tex_pos % d->tex->height;
 		d->tex_pos += d->step;
 		color = get_texture_color(d->tex, d->tex_x, d->tex_y);
 		put_pixel(x, y, color, game);
@@ -147,14 +147,12 @@ static void	draw_one_col(t_game *game, int x, float r_angle, float fov)
 
 	raw_dist = get_dda_dist(game, r_angle, &ray);
 	fix_dist = raw_dist * cosf(r_angle - game->player.rotation);
-	if (fix_dist < 0.1)
-		fix_dist = 0.1;
 	d.wall_h = (BLOCK_SIZE / fix_dist) * ((WIDTH / 2) / tanf(fov / 2));
 	d.start = (HEIGHT / 2) - (d.wall_h / 2);
 	d.end = (HEIGHT / 2) + (d.wall_h / 2);
 	d.angle = r_angle;
 	calc_texture_x(game, &ray, raw_dist, &d);
-	d.step = 1.0 * d.tex->height / d.wall_h;
+	d.step = d.tex->height / d.wall_h;
 	d.tex_pos = (d.start - HEIGHT / 2 + d.wall_h / 2) * d.step;
 	if (d.start < 0)
 	{

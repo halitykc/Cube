@@ -3,8 +3,8 @@
 #ifndef CUBE3D_H
 #define CUBE3D_H
 
-# define WIDTH 1280
-# define HEIGHT 720
+# define WIDTH 1920
+# define HEIGHT 1080
 # define BLOCK_SIZE 64
 
 # define P 3.1415926535
