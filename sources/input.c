@@ -6,7 +6,7 @@
 /*   By: hyakici <hyakici@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 12:01:58 by hyakici           #+#    #+#             */
-/*   Updated: 2025/11/22 13:02:08 by hyakici          ###   ########.fr       */
+/*   Updated: 2025/12/20 11:52:01 by hyakici          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,14 @@
 
 int	exitt(t_game *game)
 {
+	if (game->north_wall.img)
+		mlx_destroy_image(game->mlx, game->north_wall.img);
+	if (game->south_wall.img)
+		mlx_destroy_image(game->mlx, game->south_wall.img);
+	if (game->west_wall.img)
+		mlx_destroy_image(game->mlx, game->west_wall.img);
+	if (game->east_wall.img)
+		mlx_destroy_image(game->mlx, game->east_wall.img);
 	if (game->img)
 		mlx_destroy_image(game->mlx, game->img);
 	if (game->win)
